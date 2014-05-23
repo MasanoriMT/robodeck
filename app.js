@@ -85,12 +85,14 @@ app.get('/x', function(req, res) {
 app.get('/next', function(req, res) {
   console.log('NEXT- ' + 'server time: ' + getTime() + ', client time: ' + req);	
   send(JSON.stringify({ "cmd": 'next' }));
+  res.send("ok");
 });
 
 ///////////////////////////////////////////////////////////////////// ROUTES - Back()
 app.get('/back', function(req, res) {
   console.log('PREV ' + getTime());
   send(JSON.stringify({ "cmd": 'prev' }));
+  res.send("ok");
 });
 
 ///////////////////////////////////////////////////////////////////// ROUTES - Other()
@@ -132,9 +134,16 @@ sio.sockets.on('connection', function(client) {
   client.on('disconnect', function () {
     console.log('disconnect EVENT FIRED');
 	console.log(clients.length)
-	var index = clients.indexOf(client.id);
+//	var index = clients.indexOf(client.id);
+    var index = -1;
+    for(var i=0; i < clients.length; i++) {
+    	if (clients[i].id == client.id) {
+    		index = i;
+    		break;
+    	}
+    }
 	console.log(index)
-	clients.splice(index, 1);
+	if (index != -1) clients.splice(index, 1);
 	console.log(clients.length)
   });
 
@@ -144,11 +153,12 @@ sio.sockets.on('connection', function(client) {
 	var loc = data.lat + "," + data.long
 	console.log(loc)
 	gm.reverseGeocode(loc, function(err, data){
-		
-	  var city = data.results[0].address_components[2].long_name;	
-	  var state = data.results[0].address_components[4].long_name;
-	  var loc = city + ", " + state; 
-	  send(JSON.stringify({ "loc": loc }));
+		console.log(data);
+		console.log(err);
+//	  var city = data.results[0].address_components[2].long_name;	
+//	  var state = data.results[0].address_components[4].long_name;
+//	  var loc = city + ", " + state; 
+//	  send(JSON.stringify({ "loc": loc }));
 	});
   });
 });

@@ -17,11 +17,9 @@ app.views.Home = Ext.extend(Ext.Panel, {
   iconCls: 'team',
   scroll: 'vertical',
   defaults: {
-    width: '100%'
+    width: '100%',
+    margin: 30
   },
-   defaults:{
-          margin: 30
-      },
   items: [
     {
       xtype: 'button',
